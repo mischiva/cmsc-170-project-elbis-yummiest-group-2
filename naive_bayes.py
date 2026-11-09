@@ -109,3 +109,69 @@ X_train = [d[1] for d in train]
 y_train = [d[2] for d in train]
 X_test  = [d[1] for d in test]
 y_test  = [d[2] for d in test]
+
+# ===============================================================
+# blind model that does not look at the weather at all
+# finds the most common class in the training days and that becomes the baseline
+# for the model
+# the algorithm has to score higher than this blind guesser to be useful
+
+# Count how many training days each class has
+# {0: ..., 1: ..., 2: ...}
+counts = {}
+for y in y_train:
+    # If the class is not in the dictionary yet, start from 0 then add 1
+    counts[y] = counts.get(y, 0) + 1
+
+# The class with the highest count is the majority class
+majority = max(counts, key=counts.get)
+
+# Guess the majority class for every test day
+baseline_pred = [majority] * len(y_test)
+
+# ===============================================================
+# ===== ACCURACY (correct predictions / total predictions) =====
+def accuracy(y_true, y_pred):
+    correct = 0
+
+    for real, guess in zip(y_true, y_pred):
+        # If the guess is right, add 1
+        if real == guess:
+            correct += 1
+
+    return correct / len(y_true)
+
+
+# ===== PRECISION (of the days predicted as class *something, how many were really that class) =====
+def precision(y_true, y_pred, c):
+    # Days the model said were that class 
+    predicted = 0
+
+    # Of those days, the ones that really were class that
+    correct = 0
+
+    for real, guess in zip(y_true, y_pred):
+        if guess == c:
+            predicted += 1
+            if real == c:
+                correct += 1
+
+    # To avoid dividing by 0
+    if predicted == 0:
+        return 0.0
+
+    return correct / predicted
+
+
+# ===== CONFUSION MATRIX =====
+# row is real
+# col is predicted
+def confusion_matrix(y_true, y_pred):
+    # initial is 3x3 column of 0s
+    m = [[0, 0, 0] for _ in range(3)]
+
+    for real, guess in zip(y_true, y_pred):
+        # Add 1 to the cell for (real class, predicted class)
+        m[real][guess] += 1
+
+    return m
