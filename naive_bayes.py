@@ -55,7 +55,7 @@ for r in hourly:
     if key not in daily_max or uv > daily_max[key]:
         daily_max[key] = uv
 
-# The UV classification if class 0, 1, 2 based on WHO
+# ===== The UV classification if class 0, 1, 2 based on WHO =====
 def label(uv):
     # Round to nearest whole number
     uv = int(uv + 0.5)
@@ -91,3 +91,21 @@ for r in weather:
 
 # Sort by data by oldest date first
 data.sort()
+
+# ===============================================================
+# ===== TRAIN/TEST SPLIT (80/20 and chronological) =====
+
+cut = int(len(data) * 0.8)
+
+# The oldest 80% is for training
+# The newest 20% is for testing
+train, test = data[:cut], data[cut:]
+
+# GUYS TRUST ME TAMA TO KASI GINISA KAMI DATI SA PJDSC AND 
+# YUNG PART NA TO SPECIFICALLY YUNG PINAGALITAN KAMI SO NOW I KNOW
+# d[1] = the 6 features (THE INPUTS)
+# d[2] = the UV class for the day (THE ANSWERS)
+X_train = [d[1] for d in train]
+y_train = [d[2] for d in train]
+X_test  = [d[1] for d in test]
+y_test  = [d[2] for d in test]
