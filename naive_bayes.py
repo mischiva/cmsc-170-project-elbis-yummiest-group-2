@@ -95,10 +95,10 @@ data.sort()
 # ===============================================================
 # ===== TRAIN/TEST SPLIT (80/20 and chronological) =====
 
-cut = int(len(data) * 0.8)
+cut = int(len(data) * 0.7)
 
-# The oldest 80% is for training
-# The newest 20% is for testing
+# The oldest 70% is for training
+# The newest 30% is for testing
 train, test = data[:cut], data[cut:]
 
 # GUYS TRUST ME TAMA TO KASI GINISA KAMI DATI SA PJDSC AND 
