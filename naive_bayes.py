@@ -30,7 +30,7 @@ def read_dataset(path):
 
 # ===============================================================
 # Read the HOURLY - BATONG MALAKE dataset
-names, hourly = read_dataset("batongmalake_lb_Hourly_20260101_20261031_UVIndex_LST.csv")
+names, hourly = read_dataset("batongmalake_lb_Hourly_20010101_20261031_UVIndex_LST.csv")
 
 # The highest UV that day will be recorded in this dictionary
 daily_max = {}
@@ -69,7 +69,7 @@ def label(uv):
 # ===============================================================
 # Read the DAILY - BATONG MALAKE dataset
 # This one has the 6 weather features
-names, weather = read_dataset("batongmalake_lb_Daily_20260101_20261031_UVIndex_LST.csv")
+names, weather = read_dataset("batongmalake_lb_Daily_20010101_20261031_UVIndex_LST.csv")
 
 # Each day will be stored here as (date, [6 features], class)
 data = []
