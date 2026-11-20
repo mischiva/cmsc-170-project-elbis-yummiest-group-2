@@ -1,5 +1,5 @@
 # preprocessing, split, baseline and metrics all come from preprocessor.py
-from preprocessor import load_data, print_report
+from preprocessor import load_data, print_report, get_scaler, scale, add_bias
 
 # safety limit so training stops even if the data is not linearly separable
 # (weather -> UV class is not perfectly separable, so we will usually hit this)
@@ -9,32 +9,7 @@ MAX_ITERATIONS = 500
 LEARNING_RATE = 0.01
 
 
-# same reason as kNN: pressure (~99) would drown out wind (~1.5)
-# mean and std come from the TRAINING days only (no peeking at the test days)
-def get_scaler(X):
-    means = []
-    stds = []
-    for j in range(len(X[0])):
-        vals = [r[j] for r in X]
-        mean = sum(vals) / len(vals)
-        var = sum((v - mean) ** 2 for v in vals) / len(vals)
-        std = var ** 0.5
-
-        # so we never divide by 0
-        if std == 0:
-            std = 1.0
-
-        means.append(mean)
-        stds.append(std)
-    return means, stds
-
-
-# also adds x0 = +1 in front of every row (this is what the bias weight w0 gets multiplied with)
-def scale(X, means, stds):
-    return [[1.0] + [(x[j] - means[j]) / stds[j] for j in range(len(x))] for x in X]
-
-
-# PERCEPTRON FUNCTIONS (from the previous exercise) 
+# PERCEPTRON FUNCTIONS (from the previous exercise)
 # v = x0*w0 + x1*w1 + ... + xm*wm
 def computeV(x, w):
     v = 0
@@ -96,16 +71,17 @@ def train_one(X, y, target, learning_rate):
 
 
 # train all 3 perceptrons, returns {class: weights}
-def train(X, y, learning_rate):
+def train(X, y, learning_rate, verbose=True):
     model = {}
     for c in [0, 1, 2]:
         w, iterations, converged = train_one(X, y, c, learning_rate)
         model[c] = w
-        if converged:
-            print("Class", c, "perceptron converged after", iterations, "iterations")
-        else:
-            print("Class", c, "perceptron did not converge after", iterations,
-                  "iterations (data not linearly separable), using the best weights found")
+        if verbose:
+            if converged:
+                print("Class", c, "perceptron converged after", iterations, "iterations")
+            else:
+                print("Class", c, "perceptron did not converge after", iterations,
+                      "iterations (data not linearly separable), using the best weights found")
     return model
 
 
@@ -127,25 +103,30 @@ def predict(model, X):
     return [predict_one(model, x) for x in X]
 
 
-def main():
+# ENTRY POINT (called by main.py)
+# takes the shared train/test days and returns the predicted class of every test day
+def run_perceptron(X_train, y_train, X_test, verbose=True):
+    # scale using the training days only, then use the same means/stds on the test days
+    means, stds = get_scaler(X_train)
+    X_train_s = add_bias(scale(X_train, means, stds))
+    X_test_s = add_bias(scale(X_test, means, stds))
+
+    model = train(X_train_s, y_train, LEARNING_RATE, verbose)
+
+    if verbose:
+        for c in [0, 1, 2]:
+            print("Final weights class", c, ":", ["%.2f" % wi for wi in model[c]])
+
+    return predict(model, X_test_s)
+
+
+# only runs when this file is run directly (python perceptron.py), not when it is imported
+if __name__ == "__main__":
     X_train, y_train, X_test, y_test, baseline_pred = load_data()
 
     print("Training days:", len(X_train), "| Test days:", len(X_test))
     print("Learning rate =", LEARNING_RATE)
 
-    # scale using the training days only, then use the same means/stds on the test days
-    means, stds = get_scaler(X_train)
-    X_train_s = scale(X_train, means, stds)
-    X_test_s = scale(X_test, means, stds)
-
-    model = train(X_train_s, y_train, LEARNING_RATE)
-
-    for c in [0, 1, 2]:
-        print("Final weights class", c, ":", ["%.2f" % wi for wi in model[c]])
-
-    perceptron_pred = predict(model, X_test_s)
+    perceptron_pred = run_perceptron(X_train, y_train, X_test)
 
     print_report("Perceptron", y_test, perceptron_pred, baseline_pred)
-
-
-main()
