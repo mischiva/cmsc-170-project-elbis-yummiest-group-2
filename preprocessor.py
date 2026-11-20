@@ -1,8 +1,14 @@
 # shared preprocessing + helpers for knn / naive bayes / perceptron
 # Alee's lines 1-177 turned into a module, so all 3 algos can just import it.
 
-HOURLY_FILE = "batongmalake_lb_Hourly_20010101_20261031_UVIndex_LST.csv"
-DAILY_FILE = "batongmalake_lb_Daily_20010101_20261031_UVIndex_LST.csv"
+import math
+import os
+
+# folder of this file, so the CSVs are found no matter where the program is run from
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+HOURLY_FILE = os.path.join(BASE_DIR, "batongmalake_lb_Hourly_20010101_20261031_UVIndex_LST.csv")
+DAILY_FILE = os.path.join(BASE_DIR, "batongmalake_lb_Daily_20010101_20261031_UVIndex_LST.csv")
 
 # fraction of the (chronologically sorted) days used for training
 TRAIN_RATIO = 0.7
@@ -126,6 +132,45 @@ def load_data(hourly_path=HOURLY_FILE, daily_path=DAILY_FILE):
     baseline_pred = [majority] * len(y_test)
 
     return X_train, y_train, X_test, y_test, baseline_pred
+
+
+# ===== SCALING (normalization) =====
+# distance and weight based models (kNN, perceptron) need every feature on the same scale,
+# or else pressure (~99) drowns out wind (~1.5)
+# the means and stds must come from the TRAINING days only (no peeking at the test days)
+def get_scaler(X):
+    means = []
+    stds = []
+
+    # go through the 6 features one by one
+    for j in range(len(X[0])):
+        vals = [r[j] for r in X]
+
+        # mean = the average value
+        mean = sum(vals) / len(vals)
+
+        # std = how spread out the values are
+        var = sum((v - mean) ** 2 for v in vals) / len(vals)
+        std = math.sqrt(var)
+
+        # so we never divide by 0
+        if std == 0:
+            std = 1.0
+
+        means.append(mean)
+        stds.append(std)
+
+    return means, stds
+
+
+# turns every value into "how many standard deviations from the training average"
+def scale(X, means, stds):
+    return [[(x[j] - means[j]) / stds[j] for j in range(len(x))] for x in X]
+
+
+# adds x0 = +1 in front of every row (this is what the perceptron bias weight w0 gets multiplied with)
+def add_bias(X):
+    return [[1.0] + list(x) for x in X]
 
 
 # ===== ACCURACY (correct predictions / total predictions) =====
