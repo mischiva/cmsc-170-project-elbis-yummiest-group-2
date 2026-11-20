@@ -3,36 +3,8 @@
 # the algos themselves already exist, so this just takes their predictions
 # IMPORTANT: all 3 must be tested on the SAME test days, same yTest, or else it's not fair
 
-# accuracy: correct predictions / total predictions
-def accuracy(yTrue, yPred):
-    correct = 0
-
-    for real, guess in zip(yTrue, yPred):
-        # if the guess is right, add 1, yay
-        if real == guess:
-            correct += 1
-
-    return correct / len(yTrue)
-
-
-# precision 
-def precision(yTrue, yPred, c):
-    # days the model said were that class
-    predicted = 0
-
-    correct = 0
-
-    for real, guess in zip(yTrue, yPred):
-        if guess == c:
-            predicted += 1
-            if real == c:
-                correct += 1
-
-    # to avoid dividing by 0
-    if predicted == 0:
-        return 0.0
-
-    return correct / predicted
+# accuracy and precision are shared, they come from preprocessor.py
+from preprocessor import accuracy, precision
 
 
 # macro precision: average of the precision of class 0, 1, 2
