@@ -1,0 +1,264 @@
+
+############################################################
+##### ALL THREE TEMPS | columns: [0, 1, 2, 3, 4, 5]
+############################################################
+Training days: 6559 | Test days: 2812
+
+===== NAIVE BAYES =====
+Baseline accuracy: 0.662873399715505
+NB accuracy: 0.783072546230441
+NB precision class 0 : 0.1875
+NB precision class 1 : 0.6622448979591836
+NB precision class 2 : 0.8594444444444445
+Confusion matrix:
+[6, 18, 3]
+[22, 649, 250]
+[4, 313, 1547]
+
+===== KNN =====
+k = 1 | validation accuracy: 0.7507621951219512
+k = 3 | validation accuracy: 0.7942073170731707
+k = 5 | validation accuracy: 0.7903963414634146
+k = 7 | validation accuracy: 0.7957317073170732
+k = 9 | validation accuracy: 0.8094512195121951
+k = 11 | validation accuracy: 0.8086890243902439
+k = 15 | validation accuracy: 0.8109756097560976
+k = 21 | validation accuracy: 0.8094512195121951
+k = 31 | validation accuracy: 0.8163109756097561
+k = 41 | validation accuracy: 0.8109756097560976
+k = 51 | validation accuracy: 0.8079268292682927
+Best k: 31
+Baseline accuracy: 0.662873399715505
+KNN accuracy: 0.8129445234708392
+KNN precision class 0 : 0.0
+KNN precision class 1 : 0.7868383404864091
+KNN precision class 2 : 0.8215806909607194
+Confusion matrix:
+[0, 21, 6]
+[0, 550, 371]
+[0, 128, 1736]
+
+===== PERCEPTRON =====
+Class 0 perceptron did not converge after 500 iterations (data not linearly separable), using the best weights found
+Class 1 perceptron did not converge after 500 iterations (data not linearly separable), using the best weights found
+Class 2 perceptron did not converge after 500 iterations (data not linearly separable), using the best weights found
+Final weights class 0 : ['-0.30', '0.02', '0.20', '-0.08', '-0.18', '0.24', '0.00']
+Final weights class 1 : ['0.00', '0.05', '0.00', '-0.00', '0.01', '0.05', '0.05']
+Final weights class 2 : ['-0.00', '-0.03', '-0.01', '-0.02', '-0.01', '-0.06', '-0.02']
+Baseline accuracy: 0.662873399715505
+Perceptron accuracy: 0.6657183499288762
+Perceptron precision class 0 : 0.2857142857142857
+Perceptron precision class 1 : 0.4940944881889764
+Perceptron precision class 2 : 0.8719750195160031
+Confusion matrix:
+[2, 24, 1]
+[5, 753, 163]
+[0, 747, 1117]
+
+COMPARISON
+Model          Accuracy   Prec 0     Prec 1     Prec 2     Macro Prec
+--------------------------------------------------------------------
+KNN            0.8129     0.0        0.7868     0.8216     0.5361
+Naive Bayes    0.7831     0.1875     0.6622     0.8594     0.5697
+Perceptron     0.6657     0.2857     0.4941     0.872      0.5506
+
+Highest accuracy: ['KNN'] 0.8129
+Highest macro precision: ['Naive Bayes'] 0.5697
+
+############################################################
+##### AVG TEMP ONLY (T2M) | columns: [0, 1, 4, 5]
+############################################################
+Training days: 6559 | Test days: 2812
+
+===== NAIVE BAYES =====
+Baseline accuracy: 0.662873399715505
+NB accuracy: 0.7748933143669986
+NB precision class 0 : 0.24
+NB precision class 1 : 0.6633554083885209
+NB precision class 2 : 0.835725677830941
+Confusion matrix:
+[6, 16, 5]
+[16, 601, 304]
+[3, 289, 1572]
+
+===== KNN =====
+k = 1 | validation accuracy: 0.760670731707317
+k = 3 | validation accuracy: 0.7865853658536586
+k = 5 | validation accuracy: 0.7957317073170732
+k = 7 | validation accuracy: 0.8025914634146342
+k = 9 | validation accuracy: 0.8064024390243902
+k = 11 | validation accuracy: 0.8071646341463414
+k = 15 | validation accuracy: 0.8102134146341463
+k = 21 | validation accuracy: 0.8109756097560976
+k = 31 | validation accuracy: 0.8216463414634146
+k = 41 | validation accuracy: 0.819359756097561
+k = 51 | validation accuracy: 0.8147865853658537
+Best k: 31
+Baseline accuracy: 0.662873399715505
+KNN accuracy: 0.8182788051209103
+KNN precision class 0 : 0.0
+KNN precision class 1 : 0.7894002789400278
+KNN precision class 2 : 0.8281622911694511
+Confusion matrix:
+[0, 22, 5]
+[0, 566, 355]
+[0, 129, 1735]
+
+===== PERCEPTRON =====
+Class 0 perceptron did not converge after 500 iterations (data not linearly separable), using the best weights found
+Class 1 perceptron did not converge after 500 iterations (data not linearly separable), using the best weights found
+Class 2 perceptron did not converge after 500 iterations (data not linearly separable), using the best weights found
+Final weights class 0 : ['-0.28', '0.02', '-0.01', '0.14', '-0.00']
+Final weights class 1 : ['0.00', '0.03', '-0.02', '0.04', '0.02']
+Final weights class 2 : ['-0.02', '-0.01', '0.01', '-0.02', '-0.03']
+Baseline accuracy: 0.662873399715505
+Perceptron accuracy: 0.6817211948790897
+Perceptron precision class 0 : 0.0
+Perceptron precision class 1 : 0.5086816720257235
+Perceptron precision class 2 : 0.8957836117740652
+Confusion matrix:
+[0, 26, 1]
+[0, 791, 130]
+[0, 738, 1126]
+
+COMPARISON
+Model          Accuracy   Prec 0     Prec 1     Prec 2     Macro Prec
+--------------------------------------------------------------------
+KNN            0.8183     0.0        0.7894     0.8282     0.5392
+Naive Bayes    0.7749     0.24       0.6634     0.8357     0.5797
+Perceptron     0.6817     0.0        0.5087     0.8958     0.4682
+
+Highest accuracy: ['KNN'] 0.8183
+Highest macro precision: ['Naive Bayes'] 0.5797
+
+############################################################
+##### MAX TEMP ONLY (T2M_MAX) | columns: [0, 2, 4, 5]
+############################################################
+Training days: 6559 | Test days: 2812
+
+===== NAIVE BAYES =====
+Baseline accuracy: 0.662873399715505
+NB accuracy: 0.7809388335704125
+NB precision class 0 : 0.25
+NB precision class 1 : 0.6435185185185185
+NB precision class 2 : 0.8752927400468384
+Confusion matrix:
+[6, 19, 2]
+[15, 695, 211]
+[3, 366, 1495]
+
+===== KNN =====
+k = 1 | validation accuracy: 0.743140243902439
+k = 3 | validation accuracy: 0.7850609756097561
+k = 5 | validation accuracy: 0.8025914634146342
+k = 7 | validation accuracy: 0.8033536585365854
+k = 9 | validation accuracy: 0.8125
+k = 11 | validation accuracy: 0.8071646341463414
+k = 15 | validation accuracy: 0.8147865853658537
+k = 21 | validation accuracy: 0.8155487804878049
+k = 31 | validation accuracy: 0.8178353658536586
+k = 41 | validation accuracy: 0.8224085365853658
+k = 51 | validation accuracy: 0.8262195121951219
+Best k: 51
+Baseline accuracy: 0.662873399715505
+KNN accuracy: 0.819701280227596
+KNN precision class 0 : 0.0
+KNN precision class 1 : 0.7884615384615384
+KNN precision class 2 : 0.8306142034548945
+Confusion matrix:
+[0, 21, 6]
+[0, 574, 347]
+[0, 133, 1731]
+
+===== PERCEPTRON =====
+Class 0 perceptron did not converge after 500 iterations (data not linearly separable), using the best weights found
+Class 1 perceptron did not converge after 500 iterations (data not linearly separable), using the best weights found
+Class 2 perceptron did not converge after 500 iterations (data not linearly separable), using the best weights found
+Final weights class 0 : ['-0.28', '0.05', '0.04', '0.16', '-0.01']
+Final weights class 1 : ['0.00', '0.04', '0.04', '0.06', '0.01']
+Final weights class 2 : ['-0.00', '-0.06', '-0.02', '-0.04', '0.01']
+Baseline accuracy: 0.662873399715505
+Perceptron accuracy: 0.6511379800853485
+Perceptron precision class 0 : 0.0
+Perceptron precision class 1 : 0.48102094240837695
+Perceptron precision class 2 : 0.8535825545171339
+Confusion matrix:
+[0, 25, 2]
+[0, 735, 186]
+[0, 768, 1096]
+
+COMPARISON
+Model          Accuracy   Prec 0     Prec 1     Prec 2     Macro Prec
+--------------------------------------------------------------------
+KNN            0.8197     0.0        0.7885     0.8306     0.5397
+Naive Bayes    0.7809     0.25       0.6435     0.8753     0.5896
+Perceptron     0.6511     0.0        0.481      0.8536     0.4449
+
+Highest accuracy: ['KNN'] 0.8197
+Highest macro precision: ['Naive Bayes'] 0.5896
+
+############################################################
+##### MIN TEMP ONLY (T2M_MIN) | columns: [0, 3, 4, 5]
+############################################################
+Training days: 6559 | Test days: 2812
+
+===== NAIVE BAYES =====
+Baseline accuracy: 0.662873399715505
+NB accuracy: 0.7553342816500711
+NB precision class 0 : 0.1875
+NB precision class 1 : 0.6548672566371682
+NB precision class 2 : 0.8044243338360986
+Confusion matrix:
+[6, 14, 7]
+[21, 518, 382]
+[5, 259, 1600]
+
+===== KNN =====
+k = 1 | validation accuracy: 0.7469512195121951
+k = 3 | validation accuracy: 0.7842987804878049
+k = 5 | validation accuracy: 0.7888719512195121
+k = 7 | validation accuracy: 0.8025914634146342
+k = 9 | validation accuracy: 0.8079268292682927
+k = 11 | validation accuracy: 0.805640243902439
+k = 15 | validation accuracy: 0.8079268292682927
+k = 21 | validation accuracy: 0.805640243902439
+k = 31 | validation accuracy: 0.8170731707317073
+k = 41 | validation accuracy: 0.8147865853658537
+k = 51 | validation accuracy: 0.8170731707317073
+Best k: 31
+Baseline accuracy: 0.662873399715505
+KNN accuracy: 0.8154338549075392
+KNN precision class 0 : 0.0
+KNN precision class 1 : 0.7897727272727273
+KNN precision class 2 : 0.8240037950664136
+Confusion matrix:
+[0, 21, 6]
+[0, 556, 365]
+[0, 127, 1737]
+
+===== PERCEPTRON =====
+Class 0 perceptron did not converge after 500 iterations (data not linearly separable), using the best weights found
+Class 1 perceptron did not converge after 500 iterations (data not linearly separable), using the best weights found
+Class 2 perceptron did not converge after 500 iterations (data not linearly separable), using the best weights found
+Final weights class 0 : ['-0.28', '0.03', '-0.01', '0.19', '-0.02']
+Final weights class 1 : ['0.00', '0.01', '-0.02', '0.04', '0.03']
+Final weights class 2 : ['-0.00', '-0.05', '0.01', '-0.09', '-0.02']
+Baseline accuracy: 0.662873399715505
+Perceptron accuracy: 0.6945234708392604
+Perceptron precision class 0 : 0.13253012048192772
+Perceptron precision class 1 : 0.5285505124450952
+Perceptron precision class 2 : 0.8950843727072634
+Confusion matrix:
+[11, 15, 1]
+[57, 722, 142]
+[15, 629, 1220]
+
+COMPARISON
+Model          Accuracy   Prec 0     Prec 1     Prec 2     Macro Prec
+--------------------------------------------------------------------
+KNN            0.8154     0.0        0.7898     0.824      0.5379
+Naive Bayes    0.7553     0.1875     0.6549     0.8044     0.5489
+Perceptron     0.6945     0.1325     0.5286     0.8951     0.5187
+
+Highest accuracy: ['KNN'] 0.8154
+Highest macro precision: ['Naive Bayes'] 0.5489
