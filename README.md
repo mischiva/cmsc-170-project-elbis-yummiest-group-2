@@ -109,11 +109,9 @@ npm run build
 
 The output goes to `dist/`.
 
-## Deployment
+## GitHub Pages
 
-The page is published at https://mischiva.github.io/cmsc-170-project-elbis-yummiest-group-2/ with GitHub Pages through GitHub Actions. Every push to `main` runs `.github/workflows/deploy.yml`, which runs `npm ci`, `npm run build`, and deploys `dist/`. In the repo settings, Pages must use "GitHub Actions" as the source.
-
-The web page runs the files in `public/runner/`, not the ones in the repo root. If you change a Python file or a CSV in the root, copy it to `public/runner/` as well so the page matches.
+https://mischiva.github.io/cmsc-170-project-elbis-yummiest-group-2/
 
 ## Task log of member contributions
 
