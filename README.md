@@ -47,7 +47,7 @@ Cleaning rules (in `utilities/preprocessor.py`):
 | `project-implementation/utilities/` | `preprocessor.py` (reads the CSVs, labels days, splits train/test, scaling, accuracy, precision, confusion matrix) and `comparator.py` (prints accuracy and precision of the three models side by side) |
 | `project-implementation/dataset/` | The two NASA POWER CSV files (hourly and daily) |
 | `project-implementation/tests/` | `experiment.py` and `experiment.txt`: earlier experiment on six features and temperature variants, with its saved output |
-| `project-page/` | The project web page (React, Vite, Tailwind CSS): `src/`, `public/`, `index.html`, `vite.config.js`, `package.json`. `public/runner/` holds the copies of the Python files and CSVs that the page runs in the browser |
+| `project-page/` | The project web page (React, Vite, Tailwind CSS): `src/`, `public/`, `index.html`, `vite.config.js`, `package.json`. `public/runner/` holds the copies of the Python files and CSVs that the page runs in the browser (Run Code runs `main.py`, `naive_bayes.py`, `knn.py` and `perceptron.py`) |
 | `.github/workflows/deploy.yml` | Builds `project-page` and deploys it to GitHub Pages on every push to `main` (GitHub only reads workflows from the repo root) |
 
 ## Running the Python code
@@ -96,7 +96,7 @@ npm ci
 npm run dev
 ```
 
-Open the local address Vite prints (it includes the `/cmsc-170-project-elbis-yummiest-group-2/` path). The page runs the Python files in the browser using Pyodide, which is downloaded from a CDN, so an internet connection is needed.
+Open the local address Vite prints (it includes the `/cmsc-170-project-elbis-yummiest-group-2/` path). The Run Code popup runs the Python files in the browser using Pyodide, which is downloaded from a CDN, so an internet connection is needed. If you change a Python file or CSV in `project-implementation`, copy it to the same path inside `project-page/public/runner/` so the page matches.
 
 To check the production build:
 
