@@ -115,3 +115,7 @@ https://mischiva.github.io/cmsc-170-project-elbis-yummiest-group-2/
 | Member | Contribution |
 |--------|--------------|
 |        |              |
+
+## AI disclosure
+
+We used GitHub Copilot to help deploy the GitHub Pages site, because we were having trouble getting the deployment to work.
