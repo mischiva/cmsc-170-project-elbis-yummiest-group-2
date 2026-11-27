@@ -13,7 +13,10 @@ DAILY_FILE = os.path.join(BASE_DIR, "batongmalake_lb_Daily_20010101_20261031_UVI
 # fraction of the (chronologically sorted) days used for training
 TRAIN_RATIO = 0.7
 
-FEATURE_NAMES = ["WS2M", "T2M", "T2M_MAX", "T2M_MIN", "RH2M", "PS"]
+FEATURE_SETS = {
+    "set1": ["T2M", "PS", "WS2M", "RH2M"],
+    "set2": ["T2M_MAX", "PS", "WS2M", "RH2M"],
+}
 
 
 # ====== Reads the CSVs for this project ======
@@ -56,7 +59,7 @@ def label(uv):
 
 
 # ===== Builds the whole dataset and returns the train/test split =====
-def load_data(hourly_path=HOURLY_FILE, daily_path=DAILY_FILE):
+def load_data(feature_names, hourly_path=HOURLY_FILE, daily_path=DAILY_FILE):
     # ---- HOURLY: get the highest UV of each day ----
     names, hourly = read_dataset(hourly_path)
 
@@ -93,6 +96,7 @@ def load_data(hourly_path=HOURLY_FILE, daily_path=DAILY_FILE):
 
     # ---- DAILY: the 6 weather features ----
     names, weather = read_dataset(daily_path)
+    idx = [names.index(f) for f in feature_names]
 
     # Each day will be stored here as (date, [6 features], class)
     data = []
@@ -101,7 +105,7 @@ def load_data(hourly_path=HOURLY_FILE, daily_path=DAILY_FILE):
         key = (int(r[0]), int(r[1]), int(r[2]))
 
         # r[4:] = WS2M, T2M, T2M_MAX, T2M_MIN, RH2M, PS
-        feats = [float(x) for x in r[4:]]
+        feats = [float(r[i]) for i in idx]
 
         # Only keep the day if:
         # 1. it has a max uv from the hourly dataset (so it has a label)
@@ -196,6 +200,10 @@ def precision(y_true, y_pred, c):
     if predicted == 0:
         return 0.0
     return correct / predicted
+
+
+def macro_precision(y_true, y_pred):
+    return sum(precision(y_true, y_pred, c) for c in [0, 1, 2]) / 3
 
 
 # ===== CONFUSION MATRIX (row = real, col = predicted) =====
