@@ -71,10 +71,16 @@
 
 .poster-canvas {
   width: 1440px;
-  height: 7951px;
+  height: 8401px;
   flex: 0 0 auto;
   overflow: hidden;
   transform-origin: top center;
+}
+
+.poster-artwork {
+  position: relative;
+  width: 1440px;
+  height: 7951px;
 }
 
 /* title gradient from cream to blue to violet */
@@ -107,7 +113,7 @@
 
 /* scale the poster to fit the window width */
 #root {
-  height: calc(7951px * (100vw / 1440px));
+  height: calc(8401px * (100vw / 1440px));
   min-height: 0;
 }
 

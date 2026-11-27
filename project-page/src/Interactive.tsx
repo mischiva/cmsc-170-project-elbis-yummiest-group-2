@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import type { SetupKey } from "./types";
 
 // model data
 type ModelKey = "knn" | "nb" | "per";
-type SetupKey = "set1" | "set2"; // set 1 uses average temperature; set 2 uses daily high
 type Matrix = number[][];
 
 const setups: Record<SetupKey, { label: string; cm: Record<ModelKey, Matrix> }> = {
@@ -66,21 +66,7 @@ const scriptDescriptions: Record<string, string> = {
   "knn.py": "KNN only",
   "perceptron.py": "Perceptron only",
 };
-// where each script lives inside public/runner (same folders as project-implementation)
-const scriptPaths: Record<string, string> = {
-  "main.py": "main.py",
-  "naive_bayes.py": "algorithms/naive_bayes.py",
-  "knn.py": "algorithms/knn.py",
-  "perceptron.py": "algorithms/perceptron.py",
-};
-const pyFiles = [
-  "utilities/preprocessor.py",
-  "utilities/comparator.py",
-  "algorithms/knn.py",
-  "algorithms/naive_bayes.py",
-  "algorithms/perceptron.py",
-  "main.py",
-];
+const pyFiles = ["preprocessor.py", "knn.py", "naive_bayes.py", "perceptron.py", "comparator.py", "main.py"];
 const csvFiles = [
   "dataset/batongmalake_lb_Hourly_20010101_20261031_UVIndex_LST.csv",
   "dataset/batongmalake_lb_Daily_20010101_20261031_UVIndex_LST.csv",
@@ -420,8 +406,13 @@ function InfoModal({ model, onClose }: { model: ModelKey; onClose: () => void })
 }
 
 // add click areas, popups, and a sticky menu to the poster
-export default function Interactive() {
-  const [setup, setSetup] = useState<SetupKey>("set1");
+export default function Interactive({
+  setup,
+  onSetupChange,
+}: {
+  setup: SetupKey;
+  onSetupChange: (setup: SetupKey) => void;
+}) {
   const [runScript, setRunScript] = useState<string | null>(null);
   const [infoModel, setInfoModel] = useState<ModelKey | null>(null);
   const [tip, setTip] = useState<{ x: number; y: number; text: string } | null>(null);
@@ -456,7 +447,7 @@ export default function Interactive() {
 
       // feature-set buttons
       (Object.keys(buttonIds) as SetupKey[]).forEach((key) =>
-        addHotspot(canvas, q(buttonIds[key].rect), { pad: 0, radius: "24px", label: setups[key].label, onClick: () => setSetup(key) }, created),
+        addHotspot(canvas, q(buttonIds[key].rect), { pad: 0, radius: "24px", label: setups[key].label, onClick: () => onSetupChange(key) }, created),
       );
 
       // show a cell explanation on hover
