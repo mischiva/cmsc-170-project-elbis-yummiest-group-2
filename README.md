@@ -27,8 +27,8 @@ Inputs are daily weather features. Two feature sets are compared:
 
 Both CSV files are from NASA POWER, location Batong Malake, Los Baños, 01/01/2001 to 10/31/2026, local solar time:
 
-- `batongmalake_lb_Hourly_20010101_20261031_UVIndex_LST.csv`: hourly UV index. Used to get the highest UV of each day (the label).
-- `batongmalake_lb_Daily_20010101_20261031_UVIndex_LST.csv`: daily weather features.
+- `dataset/batongmalake_lb_Hourly_20010101_20261031_UVIndex_LST.csv`: hourly UV index. Used to get the highest UV of each day (the label).
+- `dataset/batongmalake_lb_Daily_20010101_20261031_UVIndex_LST.csv`: daily weather features.
 
 Cleaning rules (in `preprocessor.py`):
 
@@ -42,10 +42,11 @@ Cleaning rules (in `preprocessor.py`):
 
 | Path | What it is |
 |------|------------|
+| `dataset/` | The two NASA POWER CSV files (hourly and daily) |
 | `preprocessor.py` | Reads the CSVs, labels days, splits train/test, scaling, accuracy, precision, confusion matrix |
-| `naive_bayes.py` | Naive Bayes classifier (`run_nb`) |
-| `knn.py` | k-Nearest Neighbors (`run_knn`), picks k using a validation split |
-| `perceptron.py` | Perceptron, one per class (`run_perceptron`) |
+| `algorithms/naive_bayes.py` | Naive Bayes classifier (`run_nb`) |
+| `algorithms/knn.py` | k-Nearest Neighbors (`run_knn`), picks k using a validation split |
+| `algorithms/perceptron.py` | Perceptron, one per class (`run_perceptron`) |
 | `comparator.py` | Prints accuracy and precision of the three models side by side |
 | `main.py` | Runs everything on both feature sets and prints a summary table |
 | `experiment.py`, `experiment.txt` | Earlier experiment on six features and temperature variants, with its saved output |
@@ -69,7 +70,7 @@ To run a single model on one feature set, import it from a Python shell in the r
 
 ```python
 from preprocessor import load_data, print_report, FEATURE_SETS
-from naive_bayes import run_nb
+from algorithms.naive_bayes import run_nb
 
 X_train, y_train, X_test, y_test, baseline_pred = load_data(FEATURE_SETS["set1"])
 nb_pred = run_nb(X_train, y_train, X_test)
