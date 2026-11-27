@@ -1,5 +1,6 @@
 # preprocessing, split, baseline and metrics all come from preprocessor.py
-from preprocessor import load_data, print_report, get_scaler, scale, add_bias
+from preprocessor import (load_data, print_report, get_scaler, scale, add_bias,
+                          FEATURE_SETS)
 
 # safety limit so training stops even if the data is not linearly separable
 # (weather -> UV class is not perfectly separable, so we will usually hit this)
@@ -122,7 +123,7 @@ def run_perceptron(X_train, y_train, X_test, verbose=True):
 
 # only runs when this file is run directly (python perceptron.py), not when it is imported
 if __name__ == "__main__":
-    X_train, y_train, X_test, y_test, baseline_pred = load_data()
+    X_train, y_train, X_test, y_test, baseline_pred = load_data(FEATURE_SETS["set1"])
 
     print("Training days:", len(X_train), "| Test days:", len(X_test))
     print("Learning rate =", LEARNING_RATE)
