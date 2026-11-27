@@ -1,4 +1,4 @@
-const assetPathPrefix = "/assets";
+const assetPathPrefix = `${import.meta.env.BASE_URL}assets`;
 const imgVector = `${assetPathPrefix}/2259b.svg`;
 const imgVector1 = `${assetPathPrefix}/40854.svg`;
 const imgSkyBackground = `${assetPathPrefix}/f587c.svg`;
@@ -581,6 +581,10 @@ export default function App() {
       <p
         className="-translate-x-1/2 [word-break:break-word] absolute font-['Jersey_25:Regular'] leading-[0.74] left-[976px] not-italic text-[#489cc1] text-[43.879px] text-center top-[1912px] tracking-[-2.6327px] whitespace-nowrap"
         data-node-id="31:54"
+        style={{
+          textShadow:
+            "-2px -2px 0 #fff, 0 -2px 0 #fff, 2px -2px 0 #fff, -2px 0 0 #fff, 2px 0 0 #fff, -2px 2px 0 #fff, 0 2px 0 #fff, 2px 2px 0 #fff",
+        }}
       >
         UP UNTIL AUG 30
       </p>
