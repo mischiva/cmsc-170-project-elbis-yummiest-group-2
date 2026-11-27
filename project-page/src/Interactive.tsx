@@ -59,10 +59,9 @@ const navItems: { label: string; textId: string; targetId: string | null }[] = [
   { label: "RUN CODE", textId: "99:1", targetId: "run" }, // opens the run code popup
 ];
 
-const scripts = ["main.py", "experiment.py", "naive_bayes.py", "knn.py", "perceptron.py"];
+const scripts = ["main.py", "naive_bayes.py", "knn.py", "perceptron.py"];
 const scriptDescriptions: Record<string, string> = {
   "main.py": "all 3 models + comparison",
-  "experiment.py": "4 feature sets (slowest)",
   "naive_bayes.py": "Naive Bayes only",
   "knn.py": "KNN only",
   "perceptron.py": "Perceptron only",
@@ -70,7 +69,6 @@ const scriptDescriptions: Record<string, string> = {
 // where each script lives inside public/runner (same folders as project-implementation)
 const scriptPaths: Record<string, string> = {
   "main.py": "main.py",
-  "experiment.py": "tests/experiment.py",
   "naive_bayes.py": "algorithms/naive_bayes.py",
   "knn.py": "algorithms/knn.py",
   "perceptron.py": "algorithms/perceptron.py",
@@ -82,7 +80,6 @@ const pyFiles = [
   "algorithms/naive_bayes.py",
   "algorithms/perceptron.py",
   "main.py",
-  "tests/experiment.py",
 ];
 const csvFiles = [
   "dataset/batongmalake_lb_Hourly_20010101_20261031_UVIndex_LST.csv",

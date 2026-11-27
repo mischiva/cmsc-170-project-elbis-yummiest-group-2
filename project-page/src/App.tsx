@@ -1668,11 +1668,10 @@ export default function App() {
           data-node-id="42:41"
         >
           <p className="leading-[1.25] mb-0">main.py</p>
-          <p className="leading-[1.25] mb-0">experiment.py</p>
           <p className="leading-[1.25]">naive_bayes.py</p>
         </div>
         <div
-          className="[word-break:break-word] absolute font-['Jersey_25:Regular'] h-[107px] leading-[0] left-[826.5px] not-italic text-[#4a2574] text-[40px] top-[3911px] w-[528px]"
+          className="[word-break:break-word] absolute font-['Jersey_25:Regular'] h-[107px] leading-[0] left-[826.5px] not-italic text-[#4a2574] text-[40px] top-[3851px] w-[528px]"
           data-node-id="42:42"
         >
           <p className="leading-[1.25] mb-0">knn.py</p>
