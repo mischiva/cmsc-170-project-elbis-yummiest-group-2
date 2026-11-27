@@ -1,6 +1,6 @@
 # preprocessing, split, baseline and metrics all come from preprocessor.py
-from preprocessor import (load_data, print_report, scale_train_test, add_bias,
-                          best_class, CLASSES, FEATURE_SETS)
+from preprocessor import (load_data, print_report, get_scaler, scale, add_bias,
+                          FEATURE_SETS)
 
 # safety limit so training stops even if the data is not linearly separable
 # (weather -> UV class is not perfectly separable, so we will usually hit this)
@@ -12,7 +12,7 @@ LEARNING_RATE = 0.01
 
 # PERCEPTRON FUNCTIONS (from the previous exercise)
 # v = x0*w0 + x1*w1 + ... + xm*wm
-def compute_v(x, w):
+def computeV(x, w):
     v = 0
     for i in range(len(x)):
         v += x[i] * w[i]
@@ -27,7 +27,7 @@ def classify(v):
 
 
 # new w = current w + learning rate * x * (d - y)
-def update_weights(w, x, learning_rate, d, y):
+def updateWeights(w, x, learning_rate, d, y):
     return [w[i] + learning_rate * x[i] * (d - y) for i in range(len(w))]
 
 
@@ -52,12 +52,12 @@ def train_one(X, y, target, learning_rate):
 
         for x, answer in zip(X, y):
             d = 1.0 if answer == target else -1.0
-            v = compute_v(x, w)
+            v = computeV(x, w)
             out = classify(v)
 
             # if wrong classification, weights must be adjusted
             if out != d:
-                w = update_weights(w, x, learning_rate, d, out)
+                w = updateWeights(w, x, learning_rate, d, out)
                 errors += 1
 
         # one full pass with no mistakes = converged (data was separable)
@@ -74,7 +74,7 @@ def train_one(X, y, target, learning_rate):
 # train all 3 perceptrons, returns {class: weights}
 def train(X, y, learning_rate, verbose=True):
     model = {}
-    for c in CLASSES:
+    for c in [0, 1, 2]:
         w, iterations, converged = train_one(X, y, c, learning_rate)
         model[c] = w
         if verbose:
@@ -90,7 +90,14 @@ def train(X, y, learning_rate, verbose=True):
 # each perceptron gives a v, the biggest v wins
 # (the winner is the most sure that the day is its class)
 def predict_one(model, x):
-    return best_class({c: compute_v(x, w) for c, w in model.items()})
+    best_c = None
+    best_v = None
+    for c, w in model.items():
+        v = computeV(x, w)
+        if best_v is None or v > best_v:
+            best_c = c
+            best_v = v
+    return best_c
 
 
 def predict(model, X):
@@ -101,14 +108,14 @@ def predict(model, X):
 # takes the shared train/test days and returns the predicted class of every test day
 def run_perceptron(X_train, y_train, X_test, verbose=True):
     # scale using the training days only, then use the same means/stds on the test days
-    X_train_s, X_test_s = scale_train_test(X_train, X_test)
-    X_train_s = add_bias(X_train_s)
-    X_test_s = add_bias(X_test_s)
+    means, stds = get_scaler(X_train)
+    X_train_s = add_bias(scale(X_train, means, stds))
+    X_test_s = add_bias(scale(X_test, means, stds))
 
     model = train(X_train_s, y_train, LEARNING_RATE, verbose)
 
     if verbose:
-        for c in CLASSES:
+        for c in [0, 1, 2]:
             print("Final weights class", c, ":", ["%.2f" % wi for wi in model[c]])
 
     return predict(model, X_test_s)

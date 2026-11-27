@@ -1,5 +1,5 @@
 # preprocessing, split, baseline, scaling and metrics all come from preprocessor.py
-from preprocessor import load_data, print_report, scale_train_test
+from preprocessor import load_data, print_report, get_scaler, scale
 
 # the k values we will try (odd so there are fewer ties)
 K_LIST = [1, 3, 5, 7, 9, 11, 15, 21, 31, 41, 51]
@@ -71,7 +71,9 @@ def choose_k(X_train, y_train, verbose=True):
     X_val, y_val = X_train[cut2:], y_train[cut2:]
 
     # scale using the sub-train days only
-    X_sub_s, X_val_s = scale_train_test(X_sub, X_val)
+    m_sub, s_sub = get_scaler(X_sub)
+    X_sub_s = scale(X_sub, m_sub, s_sub)
+    X_val_s = scale(X_val, m_sub, s_sub)
 
     # for each k, count how many validation days it got right
     right = {k: 0 for k in K_LIST}
@@ -107,8 +109,11 @@ def choose_k(X_train, y_train, verbose=True):
 def run_knn(X_train, y_train, X_test, verbose=True):
     best_k = choose_k(X_train, y_train, verbose)
 
+    means, stds = get_scaler(X_train)
+    X_train_s = scale(X_train, means, stds)
+
     # the test days are scaled using the TRAINING means and stds
-    X_train_s, X_test_s = scale_train_test(X_train, X_test)
+    X_test_s = scale(X_test, means, stds)
 
     knn_pred = []
     for x in X_test_s:

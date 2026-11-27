@@ -1,21 +1,20 @@
-import math
-
 # preprocessing, split, baseline and metrics all come from preprocessor.py
-from preprocessor import (load_data, print_report, mean_and_variance, best_class,
-                          CLASSES)
+from preprocessor import load_data, print_report
 
 # ===============================================================
 # ===== NAIVE BAYES TRAINING =====
 # save the typical weather of each class
 # for each class (0, 1, 2) we save:
 #   1. prior = how common the class is
-#   2. means = the average of each feature
-#   3. variances = how spread out each feature is
+#   2. means = the average of each of the 6 features
+#   3. variances = how spread out each of the 6 features are
+import math
+
 def train_nb(X, y):
-    # {class: (prior, [means], [variances])}
+    # {class: (prior, [6 means], [6 variances])}
     model = {}
 
-    for c in CLASSES:
+    for c in [0, 1, 2]:
         # get only the training days that belong to class c
         rows_c = [x for x, answer in zip(X, y) if answer == c]
 
@@ -29,13 +28,17 @@ def train_nb(X, y):
         means = []
         variances = []
 
-        # go through the features one by one
+        # go through the 6 features one by one (j = 0 is WS2M, j = 1 is T2M, ...)
         for j in range(len(X[0])):
             # the value of feature j on every day in this class
             vals = [r[j] for r in rows_c]
 
-            # small variance = close to the mean, big = all over the place
-            mean, var = mean_and_variance(vals)
+            # mean = the average value
+            mean = sum(vals) / len(vals)
+
+            # variance = how far the values usually are from the mean
+            # small = close to the mean, big = all over the place
+            var = sum((v - mean) ** 2 for v in vals) / len(vals)
 
             means.append(mean)
 
@@ -57,31 +60,30 @@ def log_gauss(x, mean, var):
     return -0.5 * math.log(2 * math.pi * var) - ((x - mean) ** 2) / (2 * var)
 
 
-# ===== SCORE OF ONE CLASS FOR ONE DAY =====
-def class_score(prior, means, variances, x):
-    # start with the prior
-    # we use log so the very small numbers do not become 0
-    # (your spam lab used Decimal for the same reason)
-    score = math.log(prior)
-
-    # add how well each feature fits this class
-    # this is the "naive" part: the features are treated as separate
-    for j in range(len(x)):
-        score += log_gauss(x[j], means[j], variances[j])
-
-    return score
-
-
 # ===== PREDICT ONE DAY =====
 def predict_one(model, x):
-    # try every class one by one
-    scores = {}
-    for c, (prior, means, variances) in model.items():
-        scores[c] = class_score(prior, means, variances, x)
+    best_c = None
+    best_score = None
 
-    # scores are negative, the one closer to 0 is higher (-12 beats -15)
+    # try every class one by one
+    for c, (prior, means, variances) in model.items():
+        # start with the prior
+        # we use log so the very small numbers do not become 0
+        # (your spam lab used Decimal for the same reason)
+        score = math.log(prior)
+
+        # add how well each of the 6 features fits this class
+        # this is the "naive" part: the 6 features are treated as separate
+        for j in range(len(x)):
+            score += log_gauss(x[j], means[j], variances[j])
+
+        # scores are negative, the one closer to 0 is higher (-12 beats -15)
+        if best_score is None or score > best_score:
+            best_c = c
+            best_score = score
+
     # the class with the highest score is the guess
-    return best_class(scores)
+    return best_c
 
 
 # ===== PREDICT MANY DAYS =====

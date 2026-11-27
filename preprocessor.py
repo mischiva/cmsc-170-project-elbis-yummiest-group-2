@@ -13,9 +13,6 @@ DAILY_FILE = os.path.join(BASE_DIR, "batongmalake_lb_Daily_20010101_20261031_UVI
 # fraction of the (chronologically sorted) days used for training
 TRAIN_RATIO = 0.7
 
-# the UV protection classes (see label() below)
-CLASSES = [0, 1, 2]
-
 FEATURE_SETS = {
     "set1": ["T2M", "PS", "WS2M", "RH2M"],
     "set2": ["T2M_MAX", "PS", "WS2M", "RH2M"],
@@ -61,9 +58,10 @@ def label(uv):
         return 2  # Extra protection required (8+)
 
 
-# ===== HOURLY: the highest UV of each day, and the days we cannot use =====
-def daily_max_uv(hourly_path):
-    _, hourly = read_dataset(hourly_path)
+# ===== Builds the whole dataset and returns the train/test split =====
+def load_data(feature_names=FEATURE_SETS["set1"], hourly_path=HOURLY_FILE, daily_path=DAILY_FILE):
+    # ---- HOURLY: get the highest UV of each day ----
+    names, hourly = read_dataset(hourly_path)
 
     # The highest UV that day will be recorded in this dictionary
     daily_max = {}
@@ -96,78 +94,48 @@ def daily_max_uv(hourly_path):
         if n != 24:
             bad_days.add(key)
 
-    return daily_max, bad_days
-
-
-# ===== DAILY: the weather features of each usable day, with its UV class =====
-# returns a list of (date, [features], class), sorted by date, oldest first
-def build_days(daily_path, feature_names, daily_max, bad_days):
+    # ---- DAILY: the 6 weather features ----
     names, weather = read_dataset(daily_path)
     idx = [names.index(f) for f in feature_names]
 
+    # Each day will be stored here as (date, [6 features], class)
     data = []
 
     for r in weather:
         key = (int(r[0]), int(r[1]), int(r[2]))
 
-        # the chosen features of this day (r[4:] holds the weather columns)
+        # r[4:] = WS2M, T2M, T2M_MAX, T2M_MIN, RH2M, PS
         feats = [float(r[i]) for i in idx]
 
         # Only keep the day if:
         # 1. it has a max uv from the hourly dataset (so it has a label)
         # 2. it is not in bad_days (no missing hours)
-        # 3. none of the chosen features is -999 (missing)
+        # 3. none of the 6 features is -999 (missing)
         if key in daily_max and key not in bad_days and -999 not in feats:
             data.append((key, feats, label(daily_max[key])))
 
     # Sort by date, oldest first
     data.sort()
-    return data
 
-
-# ===== TRAIN/TEST SPLIT (chronological, TRAIN_RATIO for training) =====
-def split_days(data):
+    # ===== TRAIN/TEST SPLIT (70/30 and chronological) =====
     cut = int(len(data) * TRAIN_RATIO)
     train, test = data[:cut], data[cut:]
 
-    # d[1] = the features (THE INPUTS)
+    # d[1] = the 6 features (THE INPUTS)
     # d[2] = the UV class for the day (THE ANSWERS)
     X_train = [d[1] for d in train]
     y_train = [d[2] for d in train]
     X_test = [d[1] for d in test]
     y_test = [d[2] for d in test]
-    return X_train, y_train, X_test, y_test
 
-
-# ===== BASELINE: blind model that always guesses the most common training class =====
-def majority_baseline(y_train, n_test):
+    # ===== BASELINE: blind model that always guesses the most common training class =====
     counts = {}
     for y in y_train:
         counts[y] = counts.get(y, 0) + 1
     majority = max(counts, key=counts.get)
-    return [majority] * n_test
-
-
-# ===== Builds the whole dataset and returns the train/test split =====
-def load_data(feature_names=FEATURE_SETS["set1"], hourly_path=HOURLY_FILE, daily_path=DAILY_FILE):
-    daily_max, bad_days = daily_max_uv(hourly_path)
-    data = build_days(daily_path, feature_names, daily_max, bad_days)
-
-    X_train, y_train, X_test, y_test = split_days(data)
-    baseline_pred = majority_baseline(y_train, len(y_test))
+    baseline_pred = [majority] * len(y_test)
 
     return X_train, y_train, X_test, y_test, baseline_pred
-
-
-# ===== MEAN AND VARIANCE of a list of numbers =====
-# used by the scaling below and by naive bayes
-def mean_and_variance(vals):
-    # mean = the average value
-    mean = sum(vals) / len(vals)
-
-    # variance = how spread out the values are
-    var = sum((v - mean) ** 2 for v in vals) / len(vals)
-    return mean, var
 
 
 # ===== SCALING (normalization) =====
@@ -178,9 +146,15 @@ def get_scaler(X):
     means = []
     stds = []
 
-    # go through the features one by one
+    # go through the 6 features one by one
     for j in range(len(X[0])):
-        mean, var = mean_and_variance([r[j] for r in X])
+        vals = [r[j] for r in X]
+
+        # mean = the average value
+        mean = sum(vals) / len(vals)
+
+        # std = how spread out the values are
+        var = sum((v - mean) ** 2 for v in vals) / len(vals)
         std = math.sqrt(var)
 
         # so we never divide by 0
@@ -198,28 +172,9 @@ def scale(X, means, stds):
     return [[(x[j] - means[j]) / stds[j] for j in range(len(x))] for x in X]
 
 
-# scales the training days, then the test days using the TRAINING means and stds
-def scale_train_test(X_train, X_test):
-    means, stds = get_scaler(X_train)
-    return scale(X_train, means, stds), scale(X_test, means, stds)
-
-
 # adds x0 = +1 in front of every row (this is what the perceptron bias weight w0 gets multiplied with)
 def add_bias(X):
     return [[1.0] + list(x) for x in X]
-
-
-# ===== BEST CLASS: the class with the highest score =====
-# scores = {class: score}, if tied the class that comes first wins
-# used by naive bayes and the perceptron to pick their guess
-def best_class(scores):
-    best_c = None
-    best_score = None
-    for c, score in scores.items():
-        if best_score is None or score > best_score:
-            best_c = c
-            best_score = score
-    return best_c
 
 
 # ===== ACCURACY (correct predictions / total predictions) =====
@@ -247,14 +202,13 @@ def precision(y_true, y_pred, c):
     return correct / predicted
 
 
-# macro precision: average of the precision of every class
 def macro_precision(y_true, y_pred):
-    return sum(precision(y_true, y_pred, c) for c in CLASSES) / len(CLASSES)
+    return sum(precision(y_true, y_pred, c) for c in [0, 1, 2]) / 3
 
 
 # ===== CONFUSION MATRIX (row = real, col = predicted) =====
 def confusion_matrix(y_true, y_pred):
-    m = [[0] * len(CLASSES) for _ in CLASSES]
+    m = [[0, 0, 0] for _ in range(3)]
     for real, guess in zip(y_true, y_pred):
         m[real][guess] += 1
     return m
@@ -265,7 +219,7 @@ def print_report(name, y_test, pred, baseline_pred):
     print("Baseline accuracy:", accuracy(y_test, baseline_pred))
     print(name, "accuracy:", accuracy(y_test, pred))
 
-    for c in CLASSES:
+    for c in [0, 1, 2]:
         print(name, "precision class", c, ":", precision(y_test, pred, c))
 
     print("Confusion matrix:")
