@@ -1,10 +1,10 @@
 # experiment: same pipeline as main.py, different feature subsets
 # feature order: 0 WS2M, 1 T2M, 2 T2M_MAX, 3 T2M_MIN, 4 RH2M, 5 PS
-from preprocessor import load_data, print_report
+from utilities.preprocessor import load_data, print_report
 from algorithms.naive_bayes import run_nb
 from algorithms.knn import run_knn
 from algorithms.perceptron import run_perceptron
-from comparator import compare
+from utilities.comparator import compare
 
 SETUPS = [
     ("ALL THREE TEMPS", [0, 1, 2, 3, 4, 5]),

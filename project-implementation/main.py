@@ -2,12 +2,12 @@
 # then compares them
 # run this with:  python main.py
 
-from preprocessor import (load_data, print_report, FEATURE_SETS,
-                          accuracy, macro_precision)
-from naive_bayes import run_nb
-from knn import run_knn
-from perceptron import run_perceptron
-from comparator import compare
+from utilities.preprocessor import (load_data, print_report, FEATURE_SETS,
+                                    accuracy, macro_precision)
+from algorithms.naive_bayes import run_nb
+from algorithms.knn import run_knn
+from algorithms.perceptron import run_perceptron
+from utilities.comparator import compare
 
 
 def run_set(set_name, feature_names):

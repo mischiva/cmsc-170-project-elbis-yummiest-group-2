@@ -1,5 +1,5 @@
 # preprocessing, split, baseline and metrics all come from preprocessor.py
-from preprocessor import load_data, print_report
+from utilities.preprocessor import load_data, print_report
 
 # ===============================================================
 # ===== NAIVE BAYES TRAINING =====

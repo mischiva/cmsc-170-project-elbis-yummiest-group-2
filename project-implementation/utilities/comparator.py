@@ -4,7 +4,7 @@
 # IMPORTANT: all 3 must be tested on the SAME test days, same yTest, or else it's not fair
 
 # accuracy and precision are shared, they come from preprocessor.py
-from preprocessor import accuracy, precision
+from utilities.preprocessor import accuracy, precision
 
 
 # macro precision: average of the precision of class 0, 1, 2

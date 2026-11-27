@@ -1,6 +1,6 @@
 # preprocessing, split, baseline and metrics all come from preprocessor.py
-from preprocessor import (load_data, print_report, get_scaler, scale, add_bias,
-                          FEATURE_SETS)
+from utilities.preprocessor import (load_data, print_report, get_scaler, scale, add_bias,
+                                    FEATURE_SETS)
 
 # safety limit so training stops even if the data is not linearly separable
 # (weather -> UV class is not perfectly separable, so we will usually hit this)

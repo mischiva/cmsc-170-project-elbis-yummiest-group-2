@@ -1,5 +1,5 @@
 # preprocessing, split, baseline, scaling and metrics all come from preprocessor.py
-from preprocessor import load_data, print_report, get_scaler, scale
+from utilities.preprocessor import load_data, print_report, get_scaler, scale
 
 # the k values we will try (odd so there are fewer ties)
 K_LIST = [1, 3, 5, 7, 9, 11, 15, 21, 31, 41, 51]

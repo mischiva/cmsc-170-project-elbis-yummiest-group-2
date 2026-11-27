@@ -4,11 +4,11 @@
 import math
 import os
 
-# folder of this file, so the CSVs are found no matter where the program is run from
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# main project folder (one level above utilities), so the CSVs are found no matter where the program is run from
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-HOURLY_FILE = os.path.join(BASE_DIR, "batongmalake_lb_Hourly_20010101_20261031_UVIndex_LST.csv")
-DAILY_FILE = os.path.join(BASE_DIR, "batongmalake_lb_Daily_20010101_20261031_UVIndex_LST.csv")
+HOURLY_FILE = os.path.join(BASE_DIR, "dataset", "batongmalake_lb_Hourly_20010101_20261031_UVIndex_LST.csv")
+DAILY_FILE = os.path.join(BASE_DIR, "dataset", "batongmalake_lb_Daily_20010101_20261031_UVIndex_LST.csv")
 
 # fraction of the (chronologically sorted) days used for training
 TRAIN_RATIO = 0.7

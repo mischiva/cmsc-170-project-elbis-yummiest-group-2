@@ -67,10 +67,26 @@ const scriptDescriptions: Record<string, string> = {
   "knn.py": "KNN only",
   "perceptron.py": "Perceptron only",
 };
-const pyFiles = ["preprocessor.py", "knn.py", "naive_bayes.py", "perceptron.py", "comparator.py", "main.py", "experiment.py"];
+// where each script lives inside public/runner (same folders as project-implementation)
+const scriptPaths: Record<string, string> = {
+  "main.py": "main.py",
+  "experiment.py": "tests/experiment.py",
+  "naive_bayes.py": "algorithms/naive_bayes.py",
+  "knn.py": "algorithms/knn.py",
+  "perceptron.py": "algorithms/perceptron.py",
+};
+const pyFiles = [
+  "utilities/preprocessor.py",
+  "utilities/comparator.py",
+  "algorithms/knn.py",
+  "algorithms/naive_bayes.py",
+  "algorithms/perceptron.py",
+  "main.py",
+  "tests/experiment.py",
+];
 const csvFiles = [
-  "batongmalake_lb_Hourly_20010101_20261031_UVIndex_LST.csv",
-  "batongmalake_lb_Daily_20010101_20261031_UVIndex_LST.csv",
+  "dataset/batongmalake_lb_Hourly_20010101_20261031_UVIndex_LST.csv",
+  "dataset/batongmalake_lb_Daily_20010101_20261031_UVIndex_LST.csv",
 ];
 const runnerBase = import.meta.env.BASE_URL + "runner/";
 
@@ -241,7 +257,11 @@ onmessage = async function (e) {
     var py = await loadPyodide();
     py.setStdout({ batched: function (s) { postMessage({ t: "out", m: s }); } });
     py.setStderr({ batched: function (s) { postMessage({ t: "out", m: s }); } });
-    for (var n in files) py.FS.writeFile("/home/pyodide/" + n, files[n]);
+    for (var n in files) {
+      var path = "/home/pyodide/" + n;
+      py.FS.mkdirTree(path.substring(0, path.lastIndexOf("/")));
+      py.FS.writeFile(path, files[n]);
+    }
     postMessage({ t: "status", m: "Running " + script + " ..." });
     py.runPython("import sys, runpy\\nsys.path.insert(0, '/home/pyodide')\\nrunpy.run_path('/home/pyodide/" + script + "', run_name='__main__')\\n");
     postMessage({ t: "done" });
@@ -339,7 +359,7 @@ function RunModal({ initial, onClose }: { initial: string; onClose: () => void }
       setOut((o) => o + "\nWorker error: " + e.message + "\n");
       stop("Stopped with an error.");
     };
-    worker.postMessage({ files, script });
+    worker.postMessage({ files, script: scriptPaths[script] ?? script });
   };
 
   // let the user select a missing file
@@ -348,8 +368,10 @@ function RunModal({ initial, onClose }: { initial: string; onClose: () => void }
     Array.from(list).forEach((f) => {
       const rd = new FileReader();
       rd.onload = () => {
-        cacheRef.current[f.name] = String(rd.result);
-        setMissing((m) => m.filter((x) => x !== f.name));
+        // match the picked file to its folder path, like utilities/preprocessor.py
+        const full = pyFiles.concat(csvFiles).find((n) => n.split("/").pop() === f.name) ?? f.name;
+        cacheRef.current[full] = String(rd.result);
+        setMissing((m) => m.filter((x) => x !== full));
         setStatus("Loaded " + f.name + ". Press Run again.");
       };
       rd.readAsText(f);

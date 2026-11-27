@@ -30,7 +30,7 @@ Both CSV files are from NASA POWER, location Batong Malake, Los Baños, 01/01/20
 - `dataset/batongmalake_lb_Hourly_20010101_20261031_UVIndex_LST.csv`: hourly UV index. Used to get the highest UV of each day (the label).
 - `dataset/batongmalake_lb_Daily_20010101_20261031_UVIndex_LST.csv`: daily weather features.
 
-Cleaning rules (in `preprocessor.py`):
+Cleaning rules (in `utilities/preprocessor.py`):
 
 - Values of `-999` are missing. A day with a missing hourly UV value, or fewer than 24 hourly rows, is dropped.
 - A day with any missing selected feature is dropped.
@@ -42,17 +42,13 @@ Cleaning rules (in `preprocessor.py`):
 
 | Path | What it is |
 |------|------------|
-| `dataset/` | The two NASA POWER CSV files (hourly and daily) |
-| `preprocessor.py` | Reads the CSVs, labels days, splits train/test, scaling, accuracy, precision, confusion matrix |
-| `algorithms/naive_bayes.py` | Naive Bayes classifier (`run_nb`) |
-| `algorithms/knn.py` | k-Nearest Neighbors (`run_knn`), picks k using a validation split |
-| `algorithms/perceptron.py` | Perceptron, one per class (`run_perceptron`) |
-| `comparator.py` | Prints accuracy and precision of the three models side by side |
-| `main.py` | Runs everything on both feature sets and prints a summary table |
-| `experiment.py`, `experiment.txt` | Earlier experiment on six features and temperature variants, with its saved output |
-| `src/`, `index.html`, `vite.config.js`, `package.json` | The project web page (React, Vite, Tailwind CSS) |
-| `public/runner/` | Copies of the Python files and CSVs that the web page loads and runs in the browser |
-| `.github/workflows/deploy.yml` | Builds the web page and deploys it to GitHub Pages on every push to `main` |
+| `project-implementation/main.py` | Runs everything on both feature sets and prints a summary table |
+| `project-implementation/algorithms/` | `naive_bayes.py` (`run_nb`), `knn.py` (`run_knn`, picks k using a validation split), `perceptron.py` (`run_perceptron`, one perceptron per class) |
+| `project-implementation/utilities/` | `preprocessor.py` (reads the CSVs, labels days, splits train/test, scaling, accuracy, precision, confusion matrix) and `comparator.py` (prints accuracy and precision of the three models side by side) |
+| `project-implementation/dataset/` | The two NASA POWER CSV files (hourly and daily) |
+| `project-implementation/tests/` | `experiment.py` and `experiment.txt`: earlier experiment on six features and temperature variants, with its saved output |
+| `project-page/` | The project web page (React, Vite, Tailwind CSS): `src/`, `public/`, `index.html`, `vite.config.js`, `package.json`. `public/runner/` holds the copies of the Python files and CSVs that the page runs in the browser |
+| `.github/workflows/deploy.yml` | Builds `project-page` and deploys it to GitHub Pages on every push to `main` (GitHub only reads workflows from the repo root) |
 
 ## Running the Python code
 
@@ -60,16 +56,16 @@ Requirements: Python 3 (tested on 3.13). No third-party packages are needed (onl
 
 ```bash
 git clone https://github.com/mischiva/cmsc-170-project-elbis-yummiest-group-2.git
-cd cmsc-170-project-elbis-yummiest-group-2
+cd cmsc-170-project-elbis-yummiest-group-2/project-implementation
 python main.py
 ```
 
 Use `python3` instead of `python` if that is how Python is called on your machine. The script can be run from any folder because the CSV paths are resolved relative to the script. A full run takes about one minute, mostly from the KNN steps.
 
-To run a single model on one feature set, import it from a Python shell in the repo folder:
+To run a single model on one feature set, import it from a Python shell in the `project-implementation` folder:
 
 ```python
-from preprocessor import load_data, print_report, FEATURE_SETS
+from utilities.preprocessor import load_data, print_report, FEATURE_SETS
 from algorithms.naive_bayes import run_nb
 
 X_train, y_train, X_test, y_test, baseline_pred = load_data(FEATURE_SETS["set1"])
@@ -95,6 +91,7 @@ Class 0 (no protection) is rare in the test days, so per-class precision for cla
 Requirements: Node.js 22 and npm.
 
 ```bash
+cd project-page
 npm ci
 npm run dev
 ```
