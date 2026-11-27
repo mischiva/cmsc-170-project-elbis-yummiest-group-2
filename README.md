@@ -112,9 +112,72 @@ https://mischiva.github.io/cmsc-170-project-elbis-yummiest-group-2/
 
 ## Task log of member contributions
 
-| Member | Contribution |
-|--------|--------------|
-|        |              |
+Contributions are listed per member, per milestone.
+
+### Calleja, Jodi Antonette B.
+
+**Milestone 1: Proposal and setup**
+- Took part in the group discussion, reviewed the draft, and gave feedback on the proposal. Milestone 1 had few separable tasks, so the contribution was mostly supportive rather than hands-on, and it was expected to increase once implementation started.
+
+**Milestone 2: Data preparation and implementation**
+- Implemented `comparator.py`.
+
+**Milestone 3: Comparison**
+- Drafted the content of the GitHub webpage to be submitted for Milestone 4, to ease the development of the page the following week.
+
+**Milestone 4: Full results, project page and presentation**
+- Took over the creation of the entire project page implementation using ReactJS. Responsible for both the design and the attachment of the model implementations, so that a user can test the models from the page.
+- Delivered their part of the slide components well and adequately answered the questions during the presentation.
+
+### Casa, Justin C.
+
+**Milestone 1: Proposal and setup**
+- Took part in the group discussion, supported the proposal, and reviewed the draft. Milestone 1 had few separable tasks, so the contribution was mostly supportive rather than hands-on, and it was expected to increase once implementation started.
+
+**Milestone 2: Data preparation and implementation**
+- Implemented the kNN method.
+
+**Milestone 3: Comparison**
+- Performed and recorded the results of the trial runs used for the tables and graphs.
+
+**Milestone 4: Full results, project page and presentation**
+- Modified the preprocessor and main py files to accommodate the 2 feature sets implemented for the experimental design.
+- Ran and recorded the results of the trial runs for the tables and graphs, and filled up the content of the slide deck using the given slide content document.
+- Delivered their part of the slide components well and adequately answered the questions during the presentation.
+
+### Castro, Allane Lee S.
+
+**Milestone 1: Proposal and setup**
+- Co-initiated the project with Cueto. Discussed and agreed with her on the dataset (NASA POWER) and the overall direction before the proposal was written. Created the repository.
+
+**Milestone 2: Data preparation and implementation**
+- Wrote the Naive Bayes implementation, thereby providing the preprocessing code shared by all methods since it was reusable.
+
+**Milestone 3: Comparison**
+- Modularized and integrated all py files in the repository to improve code reusability and readability.
+
+**Milestone 4: Full results, project page and presentation**
+- Created the design template for the slide deck.
+- Assisted in finalizing the project's specifics and technicalities, paper-wise with Cueto and code-implementation-wise with Casa.
+- Delivered his part of the slide components well and adequately answered the questions during the presentation.
+- Finalized all the deliverables that the repository must contain.
+
+### Cueto, Raven Nathalie
+
+**Milestone 1: Proposal and setup**
+- Co-initiated the project progress with Castro. Suggested the current dataset and methods in the proposal, and collaborated with the team on the creation of the write-up.
+
+**Milestone 2: Data preparation and implementation**
+- Implemented the Perceptron and prepared the Milestone 2 progress report.
+
+**Milestone 3: Comparison**
+- Created the graphs and tables in Google Sheets and prepared the Milestone 3 progress report.
+
+**Milestone 4: Full results, project page and presentation**
+- Coordinated the team's tasking and created the copy-paste-ready slide content document.
+- Updated the project page draft that Calleja created for the previous milestone.
+- Finalized all specificities, loopholes, and technicalities of the concepts, implementation, and study, so that the project is easy to deliver and share with the rest of the group and with anyone who encounters it.
+- Delivered her part of the slide components well and adequately answered the questions during the presentation.
 
 ## AI disclosure
 
