@@ -59,7 +59,7 @@ def label(uv):
 
 
 # ===== Builds the whole dataset and returns the train/test split =====
-def load_data(feature_names, hourly_path=HOURLY_FILE, daily_path=DAILY_FILE):
+def load_data(feature_names=FEATURE_SETS["set1"], hourly_path=HOURLY_FILE, daily_path=DAILY_FILE):
     # ---- HOURLY: get the highest UV of each day ----
     names, hourly = read_dataset(hourly_path)
 
